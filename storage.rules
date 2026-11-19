@@ -1,0 +1,45 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function can(permission) {
+      return request.auth != null
+        && (request.auth.token.admin == true
+          || (request.auth.token.get("staff", false) == true
+            && request.auth.token.get("perms", []).hasAny([permission])));
+    }
+
+    function isValidImage() {
+      return request.resource != null
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches("image/(jpeg|png|webp|avif)");
+    }
+
+    match /products/{path=**} {
+      allow read: if true;
+      allow create, update: if can("catalog") && isValidImage();
+      allow delete: if can("catalog");
+    }
+
+    match /categories/{path=**} {
+      allow read: if true;
+      allow create, update: if can("catalog") && isValidImage();
+      allow delete: if can("catalog");
+    }
+
+    match /banners/{path=**} {
+      allow read: if true;
+      allow create, update: if can("cms") && isValidImage();
+      allow delete: if can("cms");
+    }
+
+    match /editorial/{path=**} {
+      allow read: if true;
+      allow create, update: if can("cms") && isValidImage();
+      allow delete: if can("cms");
+    }
+
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

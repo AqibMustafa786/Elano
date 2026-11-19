@@ -1,0 +1,23 @@
+{
+  "name": "elano-functions",
+  "private": true,
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "grant-admin": "node scripts/grant-admin.mjs"
+  },
+  "dependencies": {
+    "@google-analytics/data": "^7.3.0",
+    "elano": "file:..",
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^6.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5"
+  }
+}
